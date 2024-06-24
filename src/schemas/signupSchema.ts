@@ -13,7 +13,7 @@ export const emailValidation = z
 
 export const passwordValidation = z
   .string()
-  .min(6, "Username must be at least 6 characters");
+  .min(6, "Password must be at least 6 characters");
 
 export const signupSchema = z.object({
   username: usernameValidation,

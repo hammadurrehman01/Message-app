@@ -68,3 +68,5 @@ const UserSchema: Schema<User> = new Schema({
   },
   messages: [MessageSchema],
 });
+
+export { MessageSchema, UserSchema };
