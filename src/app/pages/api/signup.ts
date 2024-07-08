@@ -65,8 +65,8 @@ export async function POST(request: Request) {
       email,
       username,
       verifyCode
-    );
-
+    )
+    
     if (!emailResponse.success) {
       return Response.json(
         {

@@ -23,7 +23,7 @@ export const authOptions: NextAuthOptions = {
               ],
             });
             if (!user) {
-              throw new Error("No user fonud with this email");
+              throw new Error("No user found with this email");
             }
 
             if (!user.isVerified) {
@@ -46,7 +46,7 @@ export const authOptions: NextAuthOptions = {
           });
       },
     }),
-  ],
+  ],  
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
