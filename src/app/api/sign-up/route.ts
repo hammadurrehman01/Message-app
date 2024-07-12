@@ -67,9 +67,6 @@ export async function POST(request: Request) {
       verifyCode
     )
 
-    console.log("email reponse ==>", emailResponse);
-    
-    
     if (!emailResponse.success) {
       return Response.json(
         {
@@ -87,7 +84,7 @@ export async function POST(request: Request) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error registering user", error);
+    console.log("Error registering user", error);
     return Response.json(
       {
         success: false,
