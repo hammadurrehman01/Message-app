@@ -14,6 +14,8 @@ export async function GET(request: Request) {
         const queryParam = {
             username: searchParams.get("username")
         }
+        
+
     } catch (err) {
         console.log("Error checking username", err);
         return Response.json(
