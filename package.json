@@ -7,7 +7,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "format": "prettier --write src/**/*.{js,jsx,ts,tsx,css,md,json,scss} --config ./.prettierrc.json"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -25,6 +26,7 @@
     "next": "14.2.4",
     "next-auth": "^4.24.7",
     "openai": "^4.52.7",
+    "prettier": "^3.3.3",
     "react": "^18",
     "react-dom": "^18",
     "react-email": "^2.1.4",
