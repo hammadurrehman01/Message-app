@@ -19,7 +19,7 @@ export async function GET() {
     )
   }
 
-  const userId = user._id
+  const userId = user._id;
 
   try {
     const user = await UserModel.aggregate([
