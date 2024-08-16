@@ -61,6 +61,8 @@ const page = () => {
   }, [username])
 
   const onSubmit = async (data: z.infer<typeof signupSchema>) => {
+    console.log("signup triggered");
+    
     setIsSubmitting(true)
     try {
       const response = await axios.post<ApiResponse>('/api/sign-up', data)

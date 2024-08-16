@@ -16,7 +16,7 @@ import { ApiResponse } from '@/types/ApiResponse'
 import { zodResolver } from '@hookform/resolvers/zod'
 import axios, { AxiosError } from 'axios'
 import { useParams } from 'next/navigation'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 
 const VerifyAccount = () => {
@@ -33,7 +33,7 @@ const VerifyAccount = () => {
         username: params.username,
         code: data.code,
       })
-
+      
       toast({
         title: 'Success',
         description: response.data.message,
@@ -68,7 +68,7 @@ const VerifyAccount = () => {
                 <FormItem>
                   <FormLabel>Verification Code</FormLabel>
                   <FormControl>
-                    <Input placeholder='code' {...field} />
+                    <Input type='number' placeholder='code' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
