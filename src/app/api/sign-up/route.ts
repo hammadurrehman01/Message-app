@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     //   )
     // }
 
-    checkUsernameUnique(username)
+   await checkUsernameUnique(username);
 
     const existingUserByEmail = await UserModel.findOne({ email })
 
