@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     //   )
     // }
 
-   await checkUsernameUnique(username);
+    await checkUsernameUnique(username)
 
     const existingUserByEmail = await UserModel.findOne({ email })
 
@@ -65,7 +65,7 @@ export async function POST(request: Request) {
     }
 
     const emailResponse = await sendVerificationEmail(email, username, verifyCode)
-    
+
     if (!emailResponse.success) {
       return Response.json(
         {
@@ -75,13 +75,7 @@ export async function POST(request: Request) {
         { status: 500 },
       )
     }
-    return Response.json(
-      {
-        success: true,
-        message: emailResponse.message,
-      },
-      { status: 200 },
-    )
+    return Response.json({ success: true, message: emailResponse.message }, { status: 200 })
   } catch (error) {
     console.error('Error registering user', error)
     return Response.json(

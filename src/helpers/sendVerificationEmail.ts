@@ -21,6 +21,8 @@ export async function sendVerificationEmail(
     return { success: false, message: 'Failed to send verification email' }
   }
 }
+// hammadtechlabs
+// re_PC9zLfEM_ACt9wrquU1Saz6DXgrav7SxU
 
 export async function checkUsernameUnique(username: string) {
   const existingUser = await UserModel.findOne({ username, isVerified: true })

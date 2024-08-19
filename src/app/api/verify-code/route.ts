@@ -9,7 +9,7 @@ export async function POST(request: Request) {
     const decodedUsername = decodeURIComponent(username)
 
     const user = await UserModel.findOne({ username: decodedUsername })
-
+    
     if (!user) {
       return Response.json(
         {
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
     if (isCodeValid && !isCodeExpired) {
       user.isVerified = true
       await user.save()
-
+ 
       return Response.json(
         {
           success: true,

@@ -33,7 +33,7 @@ const VerifyAccount = () => {
         username: params.username,
         code: data.code,
       })
-      
+
       toast({
         title: 'Success',
         description: response.data.message,
