@@ -2,6 +2,7 @@ import dbConnect from '@/lib/dbConnect'
 import UserModel from '@/models/user.model'
 import { z } from 'zod'
 import { usernameValidation } from '@/schemas/signupSchema'
+import { checkUsernameUnique } from '@/helpers/sendVerificationEmail'
 
 const UsernameQuerySchema = z.object({
   username: usernameValidation,
@@ -30,21 +31,24 @@ export async function GET(request: Request) {
       )
     }
 
-    const { username } = result.data
+    const { username } = result.data;
 
-    const existingVerifiedUser = await UserModel.findOne({
-      username,
-    })
+    // TODO update and delete
+    // const existingVerifiedUser = await UserModel.findOne({
+    //   username,
+    // })
 
-    if (existingVerifiedUser) {
-      return Response.json(
-        {
-          success: false,
-          message: 'Username is already taken',
-        },
-        { status: 200 },
-      )
-    }
+    // if (existingVerifiedUser) {
+    //   return Response.json(
+    //     {
+    //       success: false,
+    //       message: 'Username is already taken',
+    //     },
+    //     { status: 400 },
+    //   )
+    // }
+
+    checkUsernameUnique(username)
 
     return Response.json(
       {
