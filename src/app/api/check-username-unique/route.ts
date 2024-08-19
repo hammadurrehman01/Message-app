@@ -31,7 +31,7 @@ export async function GET(request: Request) {
       )
     }
 
-    const { username } = result.data;
+    const { username } = result.data
 
     // TODO update and delete
     // const existingVerifiedUser = await UserModel.findOne({
@@ -48,7 +48,7 @@ export async function GET(request: Request) {
     //   )
     // }
 
-    checkUsernameUnique(username)
+    await checkUsernameUnique(username)
 
     return Response.json(
       {
