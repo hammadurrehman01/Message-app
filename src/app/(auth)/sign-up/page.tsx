@@ -61,6 +61,7 @@ const page = () => {
   }, [username])
 
   const onSubmit = async (data: z.infer<typeof signupSchema>) => {
+    
     setIsSubmitting(true)
     try {
       const response = await axios.post<ApiResponse>('/api/sign-up', data)
@@ -111,9 +112,9 @@ const page = () => {
                             debounced(e.target.value)
                           }}
                         />
-                        {isCheckingUsername && <Loader2 className='animate-spin' />}
+                        {isCheckingUsername && <Loader2 className='animate-spin mt-2' />}
                         <p
-                          className={`text-sm ${usernameMessage === 'Username is unique' ? 'text-green-500' : 'text-red-500'}`}
+                          className={`text-sm mt-2 ${usernameMessage === 'Username is unique' ? 'text-green-500' : 'text-red-500'}`}
                         >
                           {usernameMessage}
                         </p>

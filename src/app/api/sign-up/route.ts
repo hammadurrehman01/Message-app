@@ -1,6 +1,6 @@
 import dbConnect from '@/lib/dbConnect'
 import bcrypt from 'bcrypt'
-import { sendVerificationEmail } from '@/helpers/sendVerificationEmail'
+import { checkUsernameUnique, sendVerificationEmail } from '@/helpers/sendVerificationEmail'
 import UserModel from '@/models/user.model'
 
 export async function POST(request: Request) {
@@ -8,20 +8,23 @@ export async function POST(request: Request) {
   try {
     const { username, email, password } = await request.json()
 
-    const existingUserVerifiedByUsername = await UserModel.findOne({
-      username,
-      isVerified: true,
-    })
+    // TODO update and delete
+    // const existingUserVerifiedByUsername = await UserModel.findOne({
+    //   username,
+    //   isVerified: true,
+    // })
 
-    if (existingUserVerifiedByUsername) {
-      return Response.json(
-        {
-          success: false,
-          message: 'Username is already taken',
-        },
-        { status: 400 },
-      )
-    }
+    // if (existingUserVerifiedByUsername) {
+    //   return Response.json(
+    //     {
+    //       success: false,
+    //       message: 'Username is already taken',
+    //     },
+    //     { status: 400 },
+    //   )
+    // }
+
+    await checkUsernameUnique(username)
 
     const existingUserByEmail = await UserModel.findOne({ email })
 
@@ -72,13 +75,7 @@ export async function POST(request: Request) {
         { status: 500 },
       )
     }
-    return Response.json(
-      {
-        success: true,
-        message: 'User registered successfully, Please verify your email',
-      },
-      { status: 200 },
-    )
+    return Response.json({ success: true, message: emailResponse.message }, { status: 200 })
   } catch (error) {
     console.error('Error registering user', error)
     return Response.json(
