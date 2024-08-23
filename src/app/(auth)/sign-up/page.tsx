@@ -76,6 +76,7 @@ const page = () => {
         title: 'Signup failed',
         description: axiosError.response?.data.message,
         variant: 'destructive',
+
       })
       setIsSubmitting(false)
     }
@@ -83,7 +84,7 @@ const page = () => {
 
   return (
     <div className='flex justify-center items-center min-h-screen bg-gray-800'>
-      <div className='w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md'>
+      <div className='w-full max-w-md p-8 space-y-8 bg-[#ffffff08] rounded-lg shadow-md'>
         <div className='text-center'>
           <h1 className='text-4xl font-extrabold tracking-tight lg:text-5xl mb-6'>
             Welcome Back to True Feedback
@@ -102,6 +103,7 @@ const page = () => {
                     <FormControl>
                       <div>
                         <Input
+                          className='bg-transparent border border-[#c5c5c517] active:!border-none'
                           placeholder='Enter username'
                           {...field}
                           onChange={(e) => {
@@ -129,7 +131,7 @@ const page = () => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder='Enter email' {...field} />
+                      <Input className='bg-transparent border border-[#c5c5c517]' placeholder='Enter email' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -142,7 +144,7 @@ const page = () => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input placeholder='Enter password' {...field} />
+                      <Input className='bg-transparent border border-[#c5c5c517]' placeholder='Enter password' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
