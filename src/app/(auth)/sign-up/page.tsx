@@ -61,7 +61,6 @@ const page = () => {
   }, [username])
 
   const onSubmit = async (data: z.infer<typeof signupSchema>) => {
-    
     setIsSubmitting(true)
     try {
       const response = await axios.post<ApiResponse>('/api/sign-up', data)
@@ -69,15 +68,15 @@ const page = () => {
         title: 'Success',
         description: response.data.message,
       })
+      localStorage.setItem("user", JSON.stringify(data))
       router.replace(`/verify/${username}`)
       setIsSubmitting(false)
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>
       toast({
-        title: 'Signup failed',
+        title: 'Error',
         description: axiosError.response?.data.message,
         variant: 'destructive',
-
       })
       setIsSubmitting(false)
     }

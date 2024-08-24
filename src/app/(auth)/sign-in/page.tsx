@@ -39,6 +39,8 @@ const page = () => {
   })
 
   const onSubmit = async (data: z.infer<typeof signinSchema>) => {
+    console.log("triggered");
+    
    
     const result = await signIn('credentials', {
       redirect: false,
@@ -46,13 +48,11 @@ const page = () => {
       password: data.password,
     })
 
-    console.log("result ==>", result);
-    
     const error = result?.error
 
     if (error) {
       toast({
-        title: 'Login failed',
+        title: 'Error',
         description: error,
         variant: 'destructive',
       })

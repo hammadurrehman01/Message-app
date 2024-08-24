@@ -15,11 +15,14 @@ import { verifySchema } from '@/schemas/verifySchema'
 import { ApiResponse } from '@/types/ApiResponse'
 import { zodResolver } from '@hookform/resolvers/zod'
 import axios, { AxiosError } from 'axios'
+import { Loader2 } from 'lucide-react'
 import { useParams } from 'next/navigation'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 const VerifyAccount = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const router = useRouter()
   const params = useParams()
   const { toast } = useToast()
@@ -28,25 +31,28 @@ const VerifyAccount = () => {
   })
 
   const onSubmit = async (data: any) => {
+    setIsSubmitting(true)
     try {
       const response = await axios.post('/api/verify-code', {
         username: params.username,
         code: data.code,
       })
-
       toast({
         title: 'Success',
         description: response.data.message,
       })
-
-      router.replace('sign-in')
+      router.replace('/sign-in')
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>
-      toast({
-        title: 'Success',
-        description: axiosError.response?.data.message,
-        variant: 'destructive',
-      })
+      if (axiosError.response?.data.message) {
+        toast({
+          title: 'Error',
+          description: axiosError.response?.data.message,
+          variant: 'destructive',
+        })
+      }
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -62,7 +68,7 @@ const VerifyAccount = () => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
             <FormField
-              name='name'
+              name='code'
               control={form.control}
               render={({ field }) => (
                 <FormItem>
@@ -74,7 +80,9 @@ const VerifyAccount = () => {
                 </FormItem>
               )}
             />
-            <Button type='submit'>Submit</Button>
+            <Button type='submit'>
+              {isSubmitting ? <Loader2 className='mr-2 h-4 w-4 animate-spin' /> : 'Submit'}
+            </Button>
           </form>
         </Form>
       </div>
