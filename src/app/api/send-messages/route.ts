@@ -42,7 +42,7 @@ export async function POST(request: Request) {
         success: true,
         message: 'Message sent successfully!',
       },
-      { status: 404 },
+      { status: 200 },
     )
   } catch (error: any) {
     console.log(error.message)
