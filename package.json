@@ -11,6 +11,7 @@
     "format": "prettier --write src/**/*.{js,jsx,ts,tsx,css,md,json,scss} --config ./.prettierrc.json"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.17.1",
     "@hookform/resolvers": "^3.9.0",
     "@radix-ui/react-alert-dialog": "^1.1.1",
     "@radix-ui/react-label": "^2.1.0",
@@ -24,9 +25,11 @@
     "bcrypt": "^5.1.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "dayjs": "^1.11.13",
     "embla-carousel": "^8.1.8",
     "embla-carousel-autoplay": "^8.1.8",
     "embla-carousel-react": "^8.1.8",
+    "gemini-ai": "^2.2.1",
     "lucide-react": "^0.411.0",
     "mongoose": "^8.4.3",
     "next": "14.2.4",

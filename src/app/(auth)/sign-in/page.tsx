@@ -10,56 +10,55 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/use-toast'
-import { signinSchema } from '@/schemas/signinSchema'
-import { signupSchema } from '@/schemas/signupSchema'
-import { ApiResponse } from '@/types/ApiResponse'
+import { signInSchema } from '@/schemas/signinSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import axios, { AxiosError } from 'axios'
 import { Loader2 } from 'lucide-react'
 import { signIn } from 'next-auth/react'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useDebounceCallback, useDebounceValue } from 'usehooks-ts'
 import { z } from 'zod'
 
-const page = () => {
+const Page = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const { toast } = useToast()
   const router = useRouter()
 
   const form = useForm({
-    resolver: zodResolver(signupSchema),
+    resolver: zodResolver(signInSchema),
     defaultValues: {
       identifier: '',
       password: '',
     },
   })
 
-  const onSubmit = async (data: z.infer<typeof signinSchema>) => {
-    console.log("triggered");
-    
-   
-    const result = await signIn('credentials', {
-      redirect: false,
-      identifier: data.identifier,
-      password: data.password,
-    })
+  const onSubmit = async (data: z.infer<typeof signInSchema>) => {
+    setIsSubmitting(true)
+    try {
+      const result = await signIn('credentials', {
+        redirect: false,
+        identifier: data.identifier,
+        password: data.password,
+      })
 
-    const error = result?.error
-
-    if (error) {
+      if (result?.error) {
+        toast({
+          title: 'Error',
+          description: result.error,
+          variant: 'destructive',
+        })
+      } else if (result?.url) {
+        router.replace('/dashboard')
+      }
+    } catch (error) {
       toast({
         title: 'Error',
-        description: error,
+        description: 'Something went wrong. Please try again later.',
         variant: 'destructive',
       })
-    }
-
-    if (result?.url) {
-      router.replace('/dashboard')
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -82,15 +81,11 @@ const page = () => {
                   <FormItem>
                     <FormLabel>Email/Username</FormLabel>
                     <FormControl>
-                      <div>
-                        <Input
-                          placeholder='Enter email/username'
-                          {...field}
-                          onChange={(e) => {
-                            field.onChange(e)
-                          }}
-                        />
-                      </div>
+                      <Input
+                        placeholder='Enter email/username'
+                        {...field}
+                        onChange={(e) => field.onChange(e)}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -103,7 +98,7 @@ const page = () => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input placeholder='Enter password' {...field} />
+                      <Input placeholder='Enter password' type='password' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -111,7 +106,7 @@ const page = () => {
               />
               <Button type='submit' disabled={isSubmitting}>
                 {isSubmitting ? (
-                  <Loader2 className='mr-2 h-4 w-4 animate-spin'>Logging in</Loader2>
+                  <Loader2 className='mr-2 h-4 w-4 animate-spin' />
                 ) : (
                   'Sign in'
                 )}
@@ -124,4 +119,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page
