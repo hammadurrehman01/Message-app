@@ -45,13 +45,15 @@ export default function SendMessage() {
     resolver: zodResolver(messageSchema),
   })
 
-  const messageContent = form.watch('content')
+  // TODO update and delete
+  // const messageContent = form.watch('content')
 
   const handleMessageClick = (message: string) => {
     form.setValue('content', message)
   }
 
   const [isLoading, setIsLoading] = useState(false)
+  const [isfetching, setIsfetching] = useState(false)
 
   const onSubmit = async (data: z.infer<typeof messageSchema>) => {
     setIsLoading(true)
@@ -79,14 +81,14 @@ export default function SendMessage() {
   }
 
   const fetchSuggestedMessages = async () => {
-    setIsLoading(true)
+    setIsfetching(true)
     try {
       const response = await axios.post<any>('/api/suggest-messages')
       setSuggestedMessages(response.data.message.response.candidates[0].content.parts[0].text || '')
     } catch (error) {
       console.error('Error fetching messages:', error)
     } finally {
-      setIsLoading(false)
+      setIsfetching(false)
     }
   }
 
@@ -118,8 +120,7 @@ export default function SendMessage() {
                     placeholder='Write your anonymous message here'
                     className='resize-none'
                     {...field}
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
+                 
                   />
                 </FormControl>
                 <FormMessage />
@@ -133,7 +134,7 @@ export default function SendMessage() {
                 Please wait
               </Button>
             ) : (
-              <Button type='submit' disabled={isLoading || !messageContent}>
+              <Button type='submit' disabled={isLoading}>
                 Send It
               </Button>
             )}
@@ -157,7 +158,7 @@ export default function SendMessage() {
             <h3 className='text-xl font-semibold'>Messages</h3>
           </CardHeader>
           <CardContent className='flex flex-col space-y-4'>
-            {isLoading ? (
+            {isfetching ? (
               <>
                 <Skeleton className='h-6 w-full' />
                 <Skeleton className='h-6 w-full' />
@@ -166,18 +167,20 @@ export default function SendMessage() {
             ) : (
               <div className={suggestedMessageParentDiv}>
                 {suggestMessagesArr[0] === ''
-                  ? defaultMessagesArr.map((defaultMsg) => (
+                  ? defaultMessagesArr.map((defaultMsg, index) => (
                       <div
+                        key={index}
                         className={suggestedMessageChildDiv}
-                        onClick={() => handleMessageValue(defaultMsg)}
+                        onClick={() => handleMessageClick(defaultMsg)}
                       >
                         {defaultMsg}
                       </div>
                     ))
-                  : suggestMessagesArr.map((suggestMsg) => (
+                  : suggestMessagesArr.map((suggestMsg, index) => (
                       <div
+                        key={index}
                         className={suggestedMessageChildDiv}
-                        onClick={() => handleMessageValue(suggestMsg)}
+                        onClick={() => handleMessageClick(suggestMsg)}
                       >
                         {suggestMsg}
                       </div>
