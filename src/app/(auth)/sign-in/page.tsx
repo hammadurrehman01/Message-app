@@ -62,6 +62,10 @@ const Page = () => {
     }
   }
 
+  const user = localStorage.getItem("user");
+  const parsedUser = JSON.parse(user as any)
+  console.log("user ==>", parsedUser);
+
   return (
     <div className='flex justify-center items-center min-h-screen bg-gray-800'>
       <div className='w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md'>
@@ -83,7 +87,7 @@ const Page = () => {
                     <FormControl>
                       <Input
                         placeholder='Enter email/username'
-                        {...field}
+                        value={parsedUser.email}
                         onChange={(e) => field.onChange(e)}
                       />
                     </FormControl>
@@ -98,7 +102,7 @@ const Page = () => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input placeholder='Enter password' type='password' {...field} />
+                      <Input value={parsedUser.password} placeholder='Enter password' type='password'       onChange={(e) => field.onChange(e)} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
