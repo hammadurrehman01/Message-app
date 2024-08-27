@@ -33,31 +33,25 @@ export async function GET(request: Request) {
 
     const { username } = result.data
 
-    // TODO update and delete
-    // const existingVerifiedUser = await UserModel.findOne({
-    //   username,
-    // })
+    const isUsernameExists = await checkUsernameUnique(username)
 
-    // if (existingVerifiedUser) {
-    //   return Response.json(
-    //     {
-    //       success: false,
-    //       message: 'Username is already taken',
-    //     },
-    //     { status: 400 },
-    //   )
-    // }
-
-    await checkUsernameUnique(username)
+    if (isUsernameExists) {
+      return Response.json(
+        {
+          success: false,
+          message: 'Username is already taken',
+        },
+        { status: 400 },
+      )
+    }
 
     return Response.json(
       {
         success: true,
         message: 'Username is unique',
       },
-      { status: 200 }
-    );
-
+      { status: 200 },
+    )
   } catch (error) {
     console.error('Error checking username:', error)
     return Response.json(

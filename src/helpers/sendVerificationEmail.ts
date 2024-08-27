@@ -25,15 +25,9 @@ export async function sendVerificationEmail(
 // re_PC9zLfEM_ACt9wrquU1Saz6DXgrav7SxU
 
 export async function checkUsernameUnique(username: string) {
-  const existingUser = await UserModel.findOne({ username, isVerified: true })
-
+  const existingUser = await UserModel.findOne({ username })
   if (existingUser) {
-    return Response.json(
-      {
-        success: false,
-        message: 'Username is already taken',
-      },
-      { status: 400 },
-    )
+    return true
   }
+  return false
 }

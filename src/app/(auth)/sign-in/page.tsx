@@ -25,15 +25,21 @@ const Page = () => {
   const { toast } = useToast()
   const router = useRouter()
 
+  const user = localStorage.getItem('user')
+  const parsedUser = JSON.parse(user as any)
+  console.log('user ==>', parsedUser)
+
   const form = useForm({
     resolver: zodResolver(signInSchema),
     defaultValues: {
-      identifier: '',
-      password: '',
+      identifier: parsedUser?.email ?? parsedUser?.username ?? '',
+      password: parsedUser?.password ?? '',
     },
   })
 
   const onSubmit = async (data: z.infer<typeof signInSchema>) => {
+    console.log('data ==>', data)
+
     setIsSubmitting(true)
     try {
       const result = await signIn('credentials', {
@@ -62,10 +68,6 @@ const Page = () => {
     }
   }
 
-  const user = localStorage.getItem("user");
-  const parsedUser = JSON.parse(user as any)
-  console.log("user ==>", parsedUser);
-
   return (
     <div className='flex justify-center items-center min-h-screen bg-gray-800'>
       <div className='w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md'>
@@ -85,11 +87,7 @@ const Page = () => {
                   <FormItem>
                     <FormLabel>Email/Username</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder='Enter email/username'
-                        value={parsedUser.email}
-                        onChange={(e) => field.onChange(e)}
-                      />
+                      <Input placeholder='Enter email/username' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -102,18 +100,14 @@ const Page = () => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input value={parsedUser.password} placeholder='Enter password' type='password'       onChange={(e) => field.onChange(e)} />
+                      <Input placeholder='Enter password' {...field} type='password' />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
               <Button type='submit' disabled={isSubmitting}>
-                {isSubmitting ? (
-                  <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-                ) : (
-                  'Sign in'
-                )}
+                {isSubmitting ? <Loader2 className='mr-2 h-4 w-4 animate-spin' /> : 'Sign in'}
               </Button>
             </form>
           </Form>

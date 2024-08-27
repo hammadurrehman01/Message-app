@@ -45,17 +45,27 @@ const Navbar = () => {
                 </AlertDialogHeader>
                 <AlertDialogFooter className='!justify-center gap-4'>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={() => signOut()}>Yes, Logout</AlertDialogAction>
+                  <AlertDialogAction onClick={() =>{
+                     signOut()
+                    
+                  }}>Yes, Logout</AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
           </>
         ) : (
-          <Link href='/sign-in'>
-            <Button className={navButton} variant={'outline'}>
-              Login
-            </Button>
-          </Link>
+          <div className='flex items-center gap-2'>
+            <Link href='/sign-in'>
+              <Button className={navButton} variant={'outline'}>
+                Login
+              </Button>
+            </Link>
+            <Link href='/sign-up'>
+              <Button className={navButton} variant={'outline'}>
+                Sign up
+              </Button>
+            </Link>
+          </div>
         )}
       </div>
     </nav>
