@@ -23,11 +23,12 @@ const Page = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const { toast } = useToast()
-  const router = useRouter()
-
-  const user = localStorage.getItem('user')
-  const parsedUser = JSON.parse(user as any)
-  console.log('user ==>', parsedUser)
+  const router = useRouter();
+  let parsedUser;
+  if (typeof window !== 'undefined') {
+    const user = localStorage.getItem('user');
+    parsedUser = JSON.parse(user as any)
+  }
 
   const form = useForm({
     resolver: zodResolver(signInSchema),
@@ -38,7 +39,6 @@ const Page = () => {
   })
 
   const onSubmit = async (data: z.infer<typeof signInSchema>) => {
-    console.log('data ==>', data)
 
     setIsSubmitting(true)
     try {

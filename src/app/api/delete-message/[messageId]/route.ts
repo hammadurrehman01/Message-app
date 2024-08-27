@@ -27,10 +27,6 @@ export async function DELETE(request: NextRequest, { params }: { params: { messa
       { _id: user._id },
       { $pull: { messages: { _id: messageId } } },
     )
-
- 
-    
-    console.log("result.modifiedCount ========>", result.modifiedCount)
  
 
     if (result.modifiedCount === 0) {

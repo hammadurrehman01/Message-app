@@ -22,7 +22,7 @@ import { useForm } from 'react-hook-form'
 import { useDebounceCallback, useDebounceValue } from 'usehooks-ts'
 import { z } from 'zod'
 
-const page = () => {
+const Page = () => {
   const [username, setUsername] = useState('')
   const [usernameMessage, setUsernameMessage] = useState('')
   const [isCheckingUsername, setIsCheckingUsername] = useState(false)
@@ -68,7 +68,10 @@ const page = () => {
         title: 'Success',
         description: response.data.message,
       })
-      localStorage.setItem("user", JSON.stringify(data))
+      if (typeof window !== 'undefined') {
+        localStorage.setItem("user", JSON.stringify(data))
+      }
+
       router.replace(`/verify/${username}`)
       setIsSubmitting(false)
     } catch (error) {
@@ -161,4 +164,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page
