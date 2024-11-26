@@ -1,71 +1,143 @@
 'use client'
-
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import messages from '@/messageData.json'
-import Autoplay from 'embla-carousel-autoplay'
-import { Mail } from 'lucide-react'
-
-import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel'
-import { Message } from 'postcss'
+import { Button } from '@/components/ui/button'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { useToast } from '@/components/ui/use-toast'
+import { signupSchema } from '@/schemas/signupSchema'
+import { ApiResponse } from '@/types/ApiResponse'
+import { zodResolver } from '@hookform/resolvers/zod'
+import axios, { AxiosError } from 'axios'
+import { Loader2 } from 'lucide-react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { Skeleton } from '@/components/ui/skeleton'
+import { useForm } from 'react-hook-form'
+import { useDebounceCallback, useDebounceValue } from 'usehooks-ts'
+import { z } from 'zod'
 
-export default function Home() {
-  const [messagesData, setMessagesData] = useState<any[]>([])
-  const [isLoading, setIsLoading] = useState<boolean>(true)
+const Page = () => {
+  const [isVisible, setIsVisible] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [username, setUsername] = useState('')
 
-  useEffect(() => {
-    setTimeout(() => {
-      setMessagesData(messages)
-      setIsLoading(false)
-    }, 500)
-  }, [messagesData])
+  const { toast } = useToast()
+  const router = useRouter()
+
+  const form = useForm({
+    resolver: zodResolver(signupSchema),
+    defaultValues: {
+      username: '',
+      email: '',
+      password: '',
+    },
+  })
+
+  const onSubmit = async (data: z.infer<typeof signupSchema>) => {
+    try {
+      setIsSubmitting(true)
+      const response = await axios.post<ApiResponse>('/api/sign-up', data)
+      toast({
+        title: 'Success',
+        description: response.data.message,
+      })
+      if (response.data.message === 'User registered successfully') {
+        setIsSubmitting(false)
+        router.replace('/sign-in')
+      }
+    } catch (error) {
+      const axiosError = error as AxiosError<ApiResponse>
+      toast({
+        title: 'Error',
+        description: axiosError.response?.data.message,
+        variant: 'destructive',
+      })
+      setIsSubmitting(false)
+    }
+  }
 
   return (
-    <>
-      {/* Main content */}
-      <main className='flex-grow flex flex-col items-center justify-center px-4 md:px-24 py-12 bg-gray-800 h-[100vh] text-white'>
-        <section className='text-center mb-8 md:mb-12'>
-          <h1 className='text-3xl md:text-5xl font-bold'>
-            Dive into the World of Anonymous Feedback
+    <div className='flex justify-center items-center min-h-screen bg-gray-800'>
+      <div className='w-full max-w-md p-8 space-y-8 bg-white py-6 rounded-lg shadow-md'>
+        <div className='text-center'>
+          <h1 className='text-4xl font-extrabold tracking-tight lg:text-2xl mb-6'>
+            Welcome to our store
           </h1>
-          <p className='mt-3 md:mt-4 text-base md:text-lg'>
-            True Feedback - Where your identity remains a secret.
-          </p>
-        </section>
-
-        {/* Carousel for Messages */}
-
-        {isLoading ? (
-          <Skeleton className='h-[130px] w-[500px] rounded-xl' />
-        ) : (
-          <Carousel plugins={[Autoplay({ delay: 2000 })]} className='w-full max-w-lg md:max-w-xl'>
-            <CarouselContent>
-              {messagesData.map((message, index) => (
-                <CarouselItem key={index} className='p-4'>
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>{message.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent className='flex flex-col md:flex-row items-start space-y-2 md:space-y-0 md:space-x-4'>
-                      <Mail className='flex-shrink-0' />
+          <p className='mb-4'>Sign up to continue your shopping!</p>
+        </div>
+        <div>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+              <FormField  
+                control={form.control}
+                name='username'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Username</FormLabel>
+                    <FormControl>
                       <div>
-                        <p>{message.content}</p>
-                        <p className='text-xs text-muted-foreground'>{message.received}</p>
+                        <Input
+                          className='bg-transparent border border-[#c5c5c517] active:!border-none'
+                          placeholder='Enter username'
+                          {...field}
+                        />
                       </div>
-                    </CardContent>
-                  </Card>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
-        )}
-      </main>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-      {/* Footer */}
-      <footer className='text-center p-4 md:p-6 bg-gray-900 text-white'>
-        © 2023 True Feedback. All rights reserved.
-      </footer>
-    </>
+              <FormField
+                control={form.control}
+                name='email'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        className='bg-transparent border border-[#c5c5c517]'
+                        placeholder='Enter email'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              ></FormField>
+              <FormField
+                control={form.control}
+                name='password'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type='password'
+                        className='bg-transparent border border-[#c5c5c517]'
+                        placeholder='Enter password'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              ></FormField>
+              <Button type='submit' disabled={isSubmitting}>
+                {isSubmitting ? <Loader2 className='mr-2 h-4 w-4 animate-spin' /> : 'Signup'}
+              </Button>
+            </form>
+          </Form>
+        </div>
+      </div>
+    </div>
   )
 }
+
+export default Page

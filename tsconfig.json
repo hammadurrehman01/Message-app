@@ -21,6 +21,13 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/lib/dbConnect.ts"],
+  "include": [
+    "next-env.d.ts",
+    "env.d.ts",             // Added to ensure custom environment types are included
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "src/lib/dbConnect.ts"
+  ],
   "exclude": ["node_modules"]
 }

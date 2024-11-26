@@ -21,32 +21,28 @@ import { z } from 'zod'
 
 const Page = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
-
   const { toast } = useToast()
-  const router = useRouter();
-  let parsedUser;
-  if (typeof window !== 'undefined') {
-    const user = localStorage.getItem('user');
-    parsedUser = JSON.parse(user as any)
-  }
+  const router = useRouter()
 
   const form = useForm({
     resolver: zodResolver(signInSchema),
     defaultValues: {
-      identifier: parsedUser?.email ?? parsedUser?.username ?? '',
-      password: parsedUser?.password ?? '',
+      identifier: '',
+      password: '',
     },
   })
 
   const onSubmit = async (data: z.infer<typeof signInSchema>) => {
-
     setIsSubmitting(true)
     try {
       const result = await signIn('credentials', {
-        redirect: false,
+        // redirect: false,
         identifier: data.identifier,
         password: data.password,
+        redirect: false,
       })
+
+      console.log('result ==>', result)
 
       if (result?.error) {
         toast({
@@ -68,14 +64,30 @@ const Page = () => {
     }
   }
 
+  const handleGoogleSignIn = async () => {
+    // setIsSubmitting(true)
+    const result = await signIn('google')
+
+    if (result?.error) {
+      toast({
+        title: 'Error',
+        description: result.error,
+        variant: 'destructive',
+      })
+    } else if (result?.url) {
+      router.replace('/dashboard')
+    }
+    setIsSubmitting(false)
+  }
+
   return (
     <div className='flex justify-center items-center min-h-screen bg-gray-800'>
       <div className='w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md'>
         <div className='text-center'>
-          <h1 className='text-4xl font-extrabold tracking-tight lg:text-5xl mb-6'>
-            Welcome Back to True Feedback
+          <h1 className='text-2xl font-extrabold tracking-tight lg:text-2xl mb-6'>
+            Welcome Back to our store
           </h1>
-          <p className='mb-4'>Sign in to continue your secret conversations</p>
+          <p className='mb-4'>Sign in to continue your Shopping!</p>
         </div>
         <div>
           <Form {...form}>
@@ -85,9 +97,9 @@ const Page = () => {
                 name='identifier'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email/Username</FormLabel>
+                    <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder='Enter email/username' {...field} />
+                      <Input placeholder='Enter email ' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

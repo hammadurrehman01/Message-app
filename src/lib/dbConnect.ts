@@ -1,26 +1,21 @@
-import mongoose from 'mongoose'
+import mysql from 'mysql2/promise'
 
-type ConnectionObject = {
-  isConnected?: number
-}
+let connection: any
 
-const connection: ConnectionObject = {}
-
-async function dbConnect(): Promise<void> {
-  if (connection.isConnected) {
-    console.log('Connected to database')
-    return
-  }
-
+export const createConnection = async () => {
   try {
-    const db = await mongoose.connect(process.env.MONGODB_URI || '')
+    if (!connection) {
+      connection = await mysql.createConnection({
+        host: process.env.DATABASE_HOST,
+        user: process.env.DATABASE_USER,
+        password: process.env.DATABASE_PASSWORD,
+        database: process.env.DATABASE_NAME,
+      })
+      console.log('Connect hogaya bhai!')
+    }
+    return connection
+  } catch (error: any) {
+    console.log(error.message)
 
-    connection.isConnected = db.connections[0].readyState
-    console.log('DB Connected successfully')
-  } catch (error) {
-    console.log('DB Connection failed')
-    // process.exit(1);
   }
 }
-
-export default dbConnect
