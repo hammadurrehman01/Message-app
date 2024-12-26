@@ -38,9 +38,7 @@ function UserDashboard() {
       setIsLoading(true)
       setIsSwitchLoading(false)
       try {
-        const response = await axios.get<ApiResponse>('/api/get-products')
-
-        console.log('response ==> ', response)
+        const response: any = await axios.get<ApiResponse>('/api/get-products')
 
         setProducts(response.data.products || [])
         if (refresh) {
@@ -77,7 +75,6 @@ function UserDashboard() {
 
   const baseUrl = `${window.location.protocol}//${window.location.host}`
   const profileUrl = `${baseUrl}/u/${username}`
-
 
   return (
     <div className='mt-4 mx-4 md:mx-8 lg:mx-auto p-6 scale-90 rounded w-full max-w-6xl'>
