@@ -5,8 +5,8 @@ import { createConnection } from '@/lib/dbConnect'
 import bcrypt from 'bcrypt'
 
 // Validate environment variables
-const GOOGLE_ID = process.env.GOOGLE_ID
-const GOOGLE_SECRET = process.env.GOOGLE_SECRET
+const GOOGLE_ID = '519757252443-ejocae6rdbabjpt7508crkp7inh05uof.apps.googleusercontent.com'
+const GOOGLE_SECRET = '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'
 
 if (!GOOGLE_ID || !GOOGLE_SECRET) {
   throw new Error('Missing GOOGLE_ID or GOOGLE_SECRET in environment variables')
@@ -32,7 +32,7 @@ export const authOptions: NextAuthOptions = {
         identifier: { label: 'Email', type: 'text', placeholder: 'Enter your email' },
         password: { label: 'Password', type: 'password', placeholder: 'Enter your password' },
       },
-      async authorize(credentials) {
+      async authorize(credentials: any) {
         const connection = await createConnection()
         try {
           const [users] = await connection.query(`SELECT * FROM users WHERE email = ?`, [
@@ -64,7 +64,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ account, profile }) {
+    async signIn({ account, profile }: any) {
       if (account?.provider === 'google') {
         return profile?.email_verified && profile?.email.endsWith('@example.com')
       }
@@ -77,7 +77,7 @@ export const authOptions: NextAuthOptions = {
       session.user.isAdmin = token.isAdmin
       return session
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user }: any) {
       // Store username and isAdmin in the token
       if (user) {
         token.id = user.id
